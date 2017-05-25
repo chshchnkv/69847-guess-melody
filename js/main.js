@@ -4,15 +4,16 @@
 
 /**
  * Блок с содержимым экрана
- * @type {Element}
+ * @type {HTMLElement}
  */
 const mainSection = document.querySelector(`section.main`);
 
 /**
  * Элемент со всеми шаблонами
- * @type {Element}
+ * Note: в Safari ошибка, если const называется так же как идентификатор запрашиваемого элемента
+ * @type {HTMLElement}
  */
-const templates = document.getElementById(`templates`);
+const allTemplates = document.getElementById(`templates`);
 
 /**
  * Генерирует элемент по указанному шаблону
@@ -36,19 +37,19 @@ const elementFromTemplate = (template, index = 0) => {
  * @type {HTMLElement[]}
  */
 const gameScreens = [
-  elementFromTemplate(templates, 5),
-  elementFromTemplate(templates, 0),
-  elementFromTemplate(templates, 4),
-  elementFromTemplate(templates, 0),
-  elementFromTemplate(templates, 4),
-  elementFromTemplate(templates, 0),
-  elementFromTemplate(templates, 4),
-  elementFromTemplate(templates, 0),
-  elementFromTemplate(templates, 4),
-  elementFromTemplate(templates, 0),
-  elementFromTemplate(templates, 4),
-  elementFromTemplate(templates, 2),
-  elementFromTemplate(templates, 3)
+  elementFromTemplate(allTemplates, 5),
+  elementFromTemplate(allTemplates, 0),
+  elementFromTemplate(allTemplates, 4),
+  elementFromTemplate(allTemplates, 0),
+  elementFromTemplate(allTemplates, 4),
+  elementFromTemplate(allTemplates, 0),
+  elementFromTemplate(allTemplates, 4),
+  elementFromTemplate(allTemplates, 0),
+  elementFromTemplate(allTemplates, 4),
+  elementFromTemplate(allTemplates, 0),
+  elementFromTemplate(allTemplates, 4),
+  elementFromTemplate(allTemplates, 2),
+  elementFromTemplate(allTemplates, 3)
 ];
 
 /**
@@ -57,7 +58,7 @@ const gameScreens = [
  * @param {number} number - номер экрана в массиве
  * @return {HTMLElement|*}
  */
-const getScreen = (number) => {
+const getScreenElement = (number) => {
   if (number >= 0 && number < gameScreens.length) {
     return gameScreens[number];
   }
@@ -71,9 +72,9 @@ const getScreen = (number) => {
  */
 const showScreen = (number = 0) => {
   if (mainSection && mainSection.childElementCount > 0) {
-    mainSection.replaceChild(getScreen(number), mainSection.firstChild);
+    mainSection.replaceChild(getScreenElement(number), mainSection.firstChild);
   } else {
-    mainSection.appendChild(getScreen(number));
+    mainSection.appendChild(getScreenElement(number));
   }
 };
 
@@ -81,42 +82,39 @@ const showScreen = (number = 0) => {
  * Текущий активный экран
  * @type {number}
  */
-let activeScreen = -1;
+let activeScreenIndex = -1;
 
 /**
- * Возвращает номер следующего экрана, если он есть - иначе последний
- * @return {number}
+ * Переключает на следующие inc экранов впрерёд/назад от текущего
+ * @function
+ * @param {number} [inc = 1]
  */
-const nextScreen = () => {
-  if (activeScreen < gameScreens.length - 1) {
-    activeScreen = activeScreen + 1;
-  }
-  return activeScreen;
+const switchScreen = (inc = 1) => {
+  activeScreenIndex = inc > 0 ? Math.min(activeScreenIndex + inc, gameScreens.length - 1) : Math.max(activeScreenIndex + inc, 0);
+  showScreen(activeScreenIndex);
 };
 
 /**
- * Возвращает номер предыдущего экрана, если он есть - иначе первый
- * @return {number}
+ * @enum
  */
-const prevScreen = () => {
-  if (activeScreen > 0) {
-    activeScreen = activeScreen - 1;
-  }
-  return activeScreen;
+const keys = {
+  left: 37,
+  right: 39
 };
-
-document.addEventListener(`DOMContentLoaded`, () => {
-  showScreen(nextScreen());
-});
 
 document.addEventListener(`keydown`, (event) => {
   if (event.altKey) {
-    if (event.keyCode === 39) {
-      event.preventDefault();
-      showScreen(nextScreen());
-    } else if (event.keyCode === 37) {
-      showScreen(prevScreen());
-      event.preventDefault();
+    switch (event.keyCode) {
+      case keys.left: {
+        event.preventDefault();
+        switchScreen(-1);
+        break;
+      }
+      case keys.right: {
+        event.preventDefault();
+        switchScreen();
+        break;
+      }
     }
   }
 });
