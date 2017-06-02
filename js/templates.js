@@ -1,10 +1,10 @@
 /**
  * @function
  * @param {string} template
- * @return {HTMLElement}
+ * @return {DocumentFragment}
  */
 export default (template) => {
-  const div = document.createElement(`div`);
-  div.innerHTML = template;
-  return div.firstElementChild;
+  const container = document.createElement(`template`);
+  container.innerHTML = template;
+  return container.content;
 };
