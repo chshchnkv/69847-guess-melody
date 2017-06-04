@@ -1,37 +1,46 @@
 import getElementFromTemplate from './templates';
-import showScreen from './show-screen';
-import welcomeScreen from './main-welcome';
 import logo from './logo';
+import showScreen from './show-screen';
 
-const container = getElementFromTemplate(`<section class="main main--result"></section>`);
-const section = container.firstElementChild;
-section.appendChild(logo);
+/**
+ * @typedef {Object} Results
+ * @property {number} melodies
+ * @property {number} percent
+ */
 
-const resultElement = (fail = false) => {
-  if (fail) {
+/**
+ * @param {Results} results
+ * @return {DocumentFragment}
+ */
+const resultElement = (results) => {
+  if (results.melodies > 0) {
+    return getElementFromTemplate(`\
+      <h2 class="title">Вы настоящий меломан!</h2>
+      <div class="main-stat">За&nbsp;2&nbsp;минуты<br>вы&nbsp;отгадали ${results.melodies}&nbsp;мелодии</div>
+      <span class="main-comparison">Это&nbsp;лучше чем у&nbsp;${results.percent}%&nbsp;игроков</span>
+      <span role="button" tabindex="0" class="main-replay">Сыграть ещё раз</span>
+    `);
+  } else {
     return getElementFromTemplate(`\
       <h2 class="title">Вы проиграли</h2>
       <div class="main-stat">Ничего, вам повезет в следующий раз</div>
       <span role="button" tabindex="0" class="main-replay">Сыграть ещё раз</span>    
     `);
-  } else {
-    return getElementFromTemplate(`\
-      <h2 class="title">Вы настоящий меломан!</h2>
-      <div class="main-stat">За&nbsp;2&nbsp;минуты<br>вы&nbsp;отгадали 4&nbsp;мелодии</div>
-      <span class="main-comparison">Это&nbsp;лучше чем у&nbsp;80%&nbsp;игроков</span>
-      <span role="button" tabindex="0" class="main-replay">Сыграть ещё раз</span>
-    `);
   }
 };
 
-const returnElement = Math.trunc(Math.random() * 100) % 2 === 0 ? resultElement() : resultElement(true);
-const replayElement = returnElement.querySelector(`.main-replay`);
-const onReplayClick = (event) => {
-  event.preventDefault();
-  showScreen(welcomeScreen);
+export default (results) => {
+  const container = getElementFromTemplate(`<section class="main main--result"></section>`);
+  const section = container.firstElementChild;
+  section.appendChild(logo);
+
+  const element = resultElement(results);
+  const replayButton = element.querySelector(`.main-replay`);
+  replayButton.addEventListener(`click`, (event) => {
+    event.preventDefault();
+    showScreen(`welcome`);
+  });
+  section.appendChild(element);
+
+  return container;
 };
-replayElement.addEventListener(`click`, onReplayClick);
-
-section.appendChild(returnElement);
-
-export default container;

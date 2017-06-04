@@ -1,27 +1,37 @@
 import getElementFromTemplate from './templates';
 import logo from './logo';
-import artistScreen from './main-level-artist';
 import showScreen from './show-screen';
 
-const welcomeScreen = getElementFromTemplate(`<section class="main main--welcome"></section>`);
-const section = welcomeScreen.firstElementChild;
+/**
+ * @typedef {Object} State
+ * @property {string} level
+ * @property {number} lives
+ * @property {number} time
+ * @type {State}
+ */
+const initialState = Object.freeze({
+  level: `question-1`,
+  lives: 3,
+  time: 0
+});
 
-section.appendChild(logo);
-section.appendChild(getElementFromTemplate(`\
-    <button class="main-play">Начать игру</button>
-    <h2 class="title main-title">Правила игры</h2>
-    <p class="text main-text">
-      Правила просты&nbsp;— за&nbsp;2 минуты дать
-      максимальное количество правильных ответов.<br>
-      Удачи!
-    </p>`));
+export default () => {
+  const welcomeScreen = getElementFromTemplate(`<section class="main main--welcome"></section>`);
+  const section = welcomeScreen.firstElementChild;
+  section.appendChild(logo);
+  section.appendChild(getElementFromTemplate(`\
+      <button class="main-play">Начать игру</button>
+      <h2 class="title main-title">Правила игры</h2>
+      <p class="text main-text">
+        Правила просты&nbsp;— за&nbsp;2 минуты дать
+        максимальное количество правильных ответов.<br>
+        Удачи!
+      </p>`));
 
-const playButtonElement = welcomeScreen.querySelector(`.main-play`);
-const onPlayButtonClick = (event) => {
-  event.preventDefault();
-  showScreen(artistScreen);
+  const playButtonElement = welcomeScreen.querySelector(`.main-play`);
+  playButtonElement.addEventListener(`click`, (event) => {
+    event.preventDefault();
+    showScreen(initialState);
+  });
+  return welcomeScreen;
 };
-
-playButtonElement.addEventListener(`click`, onPlayButtonClick);
-
-export default welcomeScreen;

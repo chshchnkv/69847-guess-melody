@@ -1,9 +1,5 @@
 import getElementFromTemplate from './templates';
-import showScreen from './show-screen';
-import genreScreen from './main-level-genre';
-import answerArtist from './main-answer-artist';
-
-const levelFragment = getElementFromTemplate(`\
+const levelTemplate = `\
 <section class="main main--level main--level-artist">
   <svg xmlns="http://www.w3.org/2000/svg" class="timer" viewBox="0 0 780 780">
     <circle
@@ -21,22 +17,45 @@ const levelFragment = getElementFromTemplate(`\
   <div class="main-wrap">
     <div class="main-timer"></div>
 
-    <h2 class="title main-title">Кто исполняет эту песню?</h2>
+    <h2 class="title main-title"></h2>
     <div class="player-wrapper"></div>
     <form class="main-list"></form>
   </div>  
-</section>`);
+</section>`;
 
-const answersList = levelFragment.querySelector(`.main-list`);
-answersList.appendChild(answerArtist(`answer-1`, `val-1`, `Пелагея`));
-answersList.appendChild(answerArtist(`answer-2`, `val-2`, `Краснознаменная дивизия имени моей бабушки`));
-answersList.appendChild(answerArtist(`answer-2`, `val-2`, `Lorde`));
-
-const onAnswerChange = (event) => {
-  event.preventDefault();
-  showScreen(genreScreen);
+/**
+ * @param {string} id
+ * @param {Answer} data
+ * @return {DocumentFragment|null}
+ */
+const answerArtist = (id, data) => {
+  return getElementFromTemplate(`\
+      <div class="main-answer-wrapper">
+        <input class="main-answer-r" type="radio" id="${id}" name="answer" value="${id}" />
+        <label class="main-answer" for="${id}">
+          <img class="main-answer-preview" src="${data.content}">
+          ${data.label}
+        </label>
+      </div>  
+    `);
 };
 
-answersList.addEventListener(`change`, onAnswerChange);
+/**
+ * @param {Question} question
+ * @return {DocumentFragment}
+ */
+export default (question) => {
+  const levelFragment = getElementFromTemplate(levelTemplate);
+  const answersList = levelFragment.querySelector(`.main-list`);
+  Object.keys(question.answers).forEach((key) => {
+    answersList.appendChild(answerArtist(key, question.answers[key]));
+  });
 
-export default levelFragment;
+  answersList.addEventListener(`change`, (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    let answerEvent = new CustomEvent(`answer`, {bubbles: true, cancelable: false, detail: event.target.id});
+    answersList.dispatchEvent(answerEvent);
+  });
+  return levelFragment;
+};
