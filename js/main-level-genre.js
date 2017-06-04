@@ -10,16 +10,15 @@ const levelTemplate = `
 
 /**
  *
- * @param {string} id
  * @param {Answer} data
  * @return {DocumentFragment}
  */
-const answerGenre = (id, data) => {
+const answerGenre = (data) => {
   return getElementFromTemplate(`\
     <div class="genre-answer">
       <div class="player-wrapper"><!--TODO: data.content--></div>
-      <input type="checkbox" name="answer" value="${id}" id="${id}">
-      <label class="genre-answer-check" for="${id}"></label>
+      <input type="checkbox" name="answer" value="${data.id}" id="a${data.id}">
+      <label class="genre-answer-check" for="a${data.id}"></label>
     </div>  
   `);
 };
@@ -33,8 +32,8 @@ export default (question) => {
   const genreForm = levelFragment.querySelector(`.genre`);
   const submitBtn = genreForm.querySelector(`.genre-answer-send`);
 
-  Object.keys(question.answers).forEach((key) => {
-    genreForm.insertBefore(answerGenre(key, question.answers[key]), submitBtn);
+  question.answers.forEach((answer) => {
+    genreForm.insertBefore(answerGenre(answer), submitBtn);
   });
 
   genreForm.addEventListener(`change`, (event) => {
@@ -47,7 +46,7 @@ export default (question) => {
     event.preventDefault();
     event.stopPropagation();
     let answerEvent = new CustomEvent(`answer`, {bubbles: true, cancelable: false, detail: [...genreForm.querySelectorAll(`.genre-answer input:checked`)].map((input) => {
-      return input.id;
+      return question.answers[input.value];
     })});
     genreForm.dispatchEvent(answerEvent);
   });

@@ -10,7 +10,7 @@ import showScreen from './show-screen';
  * @type {State}
  */
 const initialState = Object.freeze({
-  level: `question-1`,
+  level: 0,
   lives: 3,
   time: 0
 });
@@ -18,7 +18,7 @@ const initialState = Object.freeze({
 export default () => {
   const welcomeScreen = getElementFromTemplate(`<section class="main main--welcome"></section>`);
   const section = welcomeScreen.firstElementChild;
-  section.appendChild(logo);
+  section.appendChild(logo());
   section.appendChild(getElementFromTemplate(`\
       <button class="main-play">Начать игру</button>
       <h2 class="title main-title">Правила игры</h2>

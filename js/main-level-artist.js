@@ -24,15 +24,14 @@ const levelTemplate = `\
 </section>`;
 
 /**
- * @param {string} id
  * @param {Answer} data
  * @return {DocumentFragment|null}
  */
-const answerArtist = (id, data) => {
+const answerArtist = (data) => {
   return getElementFromTemplate(`\
       <div class="main-answer-wrapper">
-        <input class="main-answer-r" type="radio" id="${id}" name="answer" value="${id}" />
-        <label class="main-answer" for="${id}">
+        <input class="main-answer-r" type="radio" id="a${data.id}" name="answer" value="${data.id}" />
+        <label class="main-answer" for="a${data.id}">
           <img class="main-answer-preview" src="${data.content}">
           ${data.label}
         </label>
@@ -47,14 +46,14 @@ const answerArtist = (id, data) => {
 export default (question) => {
   const levelFragment = getElementFromTemplate(levelTemplate);
   const answersList = levelFragment.querySelector(`.main-list`);
-  Object.keys(question.answers).forEach((key) => {
-    answersList.appendChild(answerArtist(key, question.answers[key]));
+  question.answers.forEach((answer) => {
+    answersList.appendChild(answerArtist(answer));
   });
 
   answersList.addEventListener(`change`, (event) => {
     event.preventDefault();
     event.stopPropagation();
-    let answerEvent = new CustomEvent(`answer`, {bubbles: true, cancelable: false, detail: event.target.id});
+    let answerEvent = new CustomEvent(`answer`, {bubbles: true, cancelable: false, detail: [question.answers[event.target.value]]});
     answersList.dispatchEvent(answerEvent);
   });
   return levelFragment;

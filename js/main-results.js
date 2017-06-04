@@ -32,7 +32,7 @@ const resultElement = (results) => {
 export default (results) => {
   const container = getElementFromTemplate(`<section class="main main--result"></section>`);
   const section = container.firstElementChild;
-  section.appendChild(logo);
+  section.appendChild(logo());
 
   const element = resultElement(results);
   const replayButton = element.querySelector(`.main-replay`);
