@@ -11,7 +11,8 @@ import resultsScreen from './main-results';
  * @param {number} nextLevel
  */
 const showNextScreen = (state, isAnswerCorrect, nextLevel) => {
-  if (isAnswerCorrect && nextLevel) {
+  // TODO: isAnswerCorrect использовать для изменения количества доступных попыток и в зависимости от этого открывать уровень
+  if (nextLevel) {
     renderScreen(Object.assign({}, state, {level: nextLevel}));
   } else {
     renderScreen(`results`);
@@ -25,30 +26,16 @@ const showNextScreen = (state, isAnswerCorrect, nextLevel) => {
  * @return {boolean}
  */
 const isAnswerCorrect = (question, answers) => {
-  const compareAnswers = (a1, a2) => {
-    if (a1.id > a2.id) {
-      return 1;
-    }
+  const compareAnswers = (a1, a2) => a1.id - a2.id;
 
-    if (a1.id < a2.id) {
-      return -1;
-    }
-
-    return 0;
-  };
-
-  const correctAnswers = question.answers.filter((answer) => {
-    return answer.isCorrect;
-  }).sort(compareAnswers);
+  const correctAnswers = question.answers.filter((answer) => answer.isCorrect).sort(compareAnswers);
 
   if (correctAnswers.length !== answers.length) {
     return false;
   }
 
   const givenAnswers = answers.slice(0).sort(compareAnswers);
-  return givenAnswers.every((answer, index) => {
-    return answer.id === correctAnswers[index].id;
-  });
+  return givenAnswers.every((answer, index) => answer.id === correctAnswers[index].id);
 };
 
 /**
