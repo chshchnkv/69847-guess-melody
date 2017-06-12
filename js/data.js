@@ -4,18 +4,25 @@
  * @property {number} lives
  * @property {number} time
  * @property {number} answers
- * @type {State}
  */
-export const initialState = Object.freeze({
-  level: 0,
-  lives: 3,
-  time: 0,
-  answers: 0
-});
 
 export const MAX_TIME = 120;
 export const MAX_LEVELS = 10;
+export const WELCOME_LEVEL = -1;
 export const RESULTS_LEVEL = MAX_LEVELS + 1;
+
+/**
+ * @function
+ * @return {State}
+ */
+export const getInitialState = () => {
+  return Object.freeze({
+    level: WELCOME_LEVEL,
+    lives: 3,
+    time: 0,
+    answers: 0
+  });
+};
 
 /**
  * @function
@@ -36,7 +43,7 @@ export const setTime = (state, time) => {
  * @return {State}
  */
 export const setLevel = (state, level) => {
-  const toLevel = (typeof level === `undefined`) || (state.lives === 0) ? RESULTS_LEVEL : Math.max(0, Math.min(RESULTS_LEVEL, level));
+  const toLevel = (typeof level === `undefined`) || (state.lives === 0) ? RESULTS_LEVEL : Math.max(WELCOME_LEVEL, Math.min(RESULTS_LEVEL, level));
   return Object.assign({}, state, {level: toLevel});
 };
 
@@ -70,7 +77,7 @@ export const setAnswers = (state, answers) => {
  * @return {State}
  */
 export const userAnswersQuestion = (state, question, answers) => {
-  const isCorrect = isAnswerCorrect(question, [].concat(answers));
+  const isCorrect = isAnswerCorrect(question, answers);
   let resultState = setAnswers(state, isCorrect ? state.answers + 1 : state.answers);
   resultState = setLives(resultState, isCorrect ? state.lives : -1);
   resultState = setLevel(resultState, question.next);
@@ -131,7 +138,7 @@ export default Object.freeze({
       isCorrect: false
     }, {
       id: 2,
-      content: `./img/diviziya.jpg`,
+      content: `./img/lorde.png`,
       label: `Lorde`,
       isCorrect: false
     }],
@@ -166,12 +173,12 @@ export default Object.freeze({
       id: 0,
       content: `./img/linda.jpg`,
       label: `Линда`,
-      isCorrect: true
+      isCorrect: false
     }, {
       id: 1,
       content: `./img/masha-medvedi.jpg`,
       label: `Маша и Медведи`,
-      isCorrect: false
+      isCorrect: true
     }, {
       id: 2,
       content: `./img/mara.jpg`,
@@ -202,3 +209,12 @@ export default Object.freeze({
     }]
   }]
 });
+
+/**
+ * @function
+ * @param {Question} question
+ * @return {Answer[]}
+ */
+export const getCorrectAnswers = (question) => {
+  return question.answers.filter((answer) => answer.isCorrect);
+};

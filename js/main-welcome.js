@@ -1,7 +1,7 @@
 import getElementFromTemplate from './templates';
 import logo from './logo';
 import showScreen from './show-screen';
-import {initialState} from './data';
+import {getInitialState, setLevel} from './data';
 
 export default () => {
   const welcomeScreen = getElementFromTemplate(`<section class="main main--welcome"></section>`);
@@ -19,7 +19,7 @@ export default () => {
   const playButtonElement = welcomeScreen.querySelector(`.main-play`);
   playButtonElement.addEventListener(`click`, (event) => {
     event.preventDefault();
-    showScreen(initialState);
+    showScreen(setLevel(getInitialState(), 0));
   });
   return welcomeScreen;
 };

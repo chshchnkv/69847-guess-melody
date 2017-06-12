@@ -1,4 +1,5 @@
 import getElementFromTemplate from './templates';
+
 const levelTemplate = `\
 <section class="main main--level main--level-artist">
   <svg xmlns="http://www.w3.org/2000/svg" class="timer" viewBox="0 0 780 780">
@@ -45,6 +46,7 @@ const answerArtist = (data) => {
  */
 export default (question) => {
   const levelFragment = getElementFromTemplate(levelTemplate);
+  levelFragment.querySelector(`.main-title`).innerText = question.label;
   const answersList = levelFragment.querySelector(`.main-list`);
   question.answers.forEach((answer) => {
     answersList.appendChild(answerArtist(answer));

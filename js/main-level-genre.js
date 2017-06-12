@@ -29,6 +29,7 @@ const answerGenre = (data) => {
  */
 export default (question) => {
   const levelFragment = getElementFromTemplate(levelTemplate);
+  levelFragment.querySelector(`.title`).innerText = question.label;
   const genreForm = levelFragment.querySelector(`.genre`);
   const submitBtn = genreForm.querySelector(`.genre-answer-send`);
 
