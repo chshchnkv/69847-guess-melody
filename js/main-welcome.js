@@ -1,19 +1,7 @@
 import getElementFromTemplate from './templates';
 import logo from './logo';
 import showScreen from './show-screen';
-
-/**
- * @typedef {Object} State
- * @property {string} level
- * @property {number} lives
- * @property {number} time
- * @type {State}
- */
-const initialState = Object.freeze({
-  level: 0,
-  lives: 3,
-  time: 0
-});
+import {initialState} from './data';
 
 export default () => {
   const welcomeScreen = getElementFromTemplate(`<section class="main main--welcome"></section>`);

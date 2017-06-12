@@ -1,4 +1,5 @@
 import data from './data';
+import {isAnswerCorrect} from './data';
 import welcomeScreen from './main-welcome';
 import screenArtist from './main-level-artist';
 import screenGenre from './main-level-genre';
@@ -7,35 +8,16 @@ import resultsScreen from './main-results';
 /**
  * @function
  * @param {State} state
- * @param {boolean} isAnswerCorrect
+ * @param {boolean} isCorrect
  * @param {number} nextLevel
  */
-const showNextScreen = (state, isAnswerCorrect, nextLevel) => {
-  // TODO: isAnswerCorrect использовать для изменения количества доступных попыток и в зависимости от этого открывать уровень
+const showNextScreen = (state, isCorrect, nextLevel) => {
+  // TODO: isCorrect использовать для изменения количества доступных попыток и в зависимости от этого открывать уровень
   if (nextLevel) {
     renderScreen(Object.assign({}, state, {level: nextLevel}));
   } else {
     renderScreen(`results`);
   }
-};
-
-/**
- * @function
- * @param {Question} question
- * @param {Answer[]} answers
- * @return {boolean}
- */
-const isAnswerCorrect = (question, answers) => {
-  const compareAnswers = (a1, a2) => a1.id - a2.id;
-
-  const correctAnswers = question.answers.filter((answer) => answer.isCorrect).sort(compareAnswers);
-
-  if (correctAnswers.length !== answers.length) {
-    return false;
-  }
-
-  const givenAnswers = answers.slice(0).sort(compareAnswers);
-  return givenAnswers.every((answer, index) => answer.id === correctAnswers[index].id);
 };
 
 /**
