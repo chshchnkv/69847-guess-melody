@@ -49,13 +49,32 @@ export const setLevel = (state, level) => {
 
 /**
  * @function
+ * @private
  * @param {State} state
- * @param {number} lives
+ * @param {number} count
  * @return {State}
  */
-export const setLives = (state, lives) => {
-  const newLivesCount = lives >= 0 ? lives : state.lives + lives;
-  return Object.assign({}, state, {lives: Math.max(0, newLivesCount)});
+const _setLivesCount = (state, count) => {
+  return Object.assign({}, state, {lives: Math.max(0, count)});
+};
+
+/**
+ * @function
+ * @param {State} state
+ * @return {State}
+ */
+export const decreaseLivesCount = (state) => {
+  return _setLivesCount(state, state.lives - 1);
+};
+
+/**
+ * @function
+ * @param {State} state
+ * @param {number} [lives]
+ * @return {State}
+ */
+export const resetLivesCount = (state, lives) => {
+  return _setLivesCount(state, lives);
 };
 
 /**
@@ -64,8 +83,17 @@ export const setLives = (state, lives) => {
  * @param {number} answers
  * @return {State}
  */
-export const setAnswers = (state, answers) => {
+const _setAnswersCount = (state, answers) => {
   return Object.assign({}, state, {answers: Math.max(0, answers)});
+};
+
+/**
+ * @function
+ * @param {State} state
+ * @return {State}
+ */
+export const increaseAnswersCount = (state) => {
+  return _setAnswersCount(state, state.answers + 1);
 };
 
 
@@ -76,10 +104,15 @@ export const setAnswers = (state, answers) => {
  * @param {Answer[] | Answer} answers
  * @return {State}
  */
-export const userAnswersQuestion = (state, question, answers) => {
+export const applyAnswer = (state, question, answers) => {
   const isCorrect = isAnswerCorrect(question, answers);
-  let resultState = setAnswers(state, isCorrect ? state.answers + 1 : state.answers);
-  resultState = setLives(resultState, isCorrect ? state.lives : -1);
+  let resultState = state;
+
+  if (isCorrect) {
+    resultState = increaseAnswersCount(state);
+  } else {
+    resultState = decreaseLivesCount(state);
+  }
   resultState = setLevel(resultState, question.next);
 
   return Object.assign({}, state, resultState);

@@ -1,5 +1,5 @@
 import data from './data';
-import {userAnswersQuestion, RESULTS_LEVEL, WELCOME_LEVEL} from './data';
+import {applyAnswer, RESULTS_LEVEL, WELCOME_LEVEL} from './data';
 import welcomeScreen from './main-welcome';
 import screenArtist from './main-level-artist';
 import screenGenre from './main-level-genre';
@@ -48,7 +48,7 @@ const renderScreen = (state) => {
     const screenElement = appElement.firstElementChild;
     screenElement.addEventListener(`answer`, (event) => {
       event.preventDefault();
-      renderScreen(userAnswersQuestion(state, currentQuestion, event.detail));
+      renderScreen(applyAnswer(state, currentQuestion, event.detail));
     });
   }
 };
