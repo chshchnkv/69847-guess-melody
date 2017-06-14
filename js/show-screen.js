@@ -1,5 +1,5 @@
 import data from './data';
-import {applyAnswer, RESULTS_LEVEL, WELCOME_LEVEL} from './data';
+import {applyAnswer, RESULTS_LEVEL, WELCOME_LEVEL} from './state';
 import welcomeScreen from './main-welcome';
 import screenArtist from './main-level-artist';
 import screenGenre from './main-level-genre';

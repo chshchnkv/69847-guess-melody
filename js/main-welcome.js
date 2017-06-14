@@ -1,7 +1,7 @@
 import getElementFromTemplate from './templates';
 import logo from './logo';
 import showScreen from './show-screen';
-import {getInitialState, setLevel} from './data';
+import {getInitialState, setLevel} from './state';
 
 export default () => {
   const welcomeScreen = getElementFromTemplate(`<section class="main main--welcome"></section>`);

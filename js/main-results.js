@@ -1,7 +1,7 @@
 import getElementFromTemplate from './templates';
 import logo from './logo';
 import showScreen from './show-screen';
-import {getInitialState} from './data';
+import {getInitialState} from './state';
 
 /**
  * @typedef {Object} Results
