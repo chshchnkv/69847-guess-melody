@@ -55,6 +55,8 @@ $preview-spacing: 11px;
 }
 
 .main-answer-preview {
+  object-fit: cover;
+  object-position: center;
   background: $color-beige;
   border: solid 5px $color-text-dark;
   border-radius: $preview-size;

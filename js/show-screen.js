@@ -1,4 +1,5 @@
 import data from './data';
+import {applyAnswer, RESULTS_LEVEL, WELCOME_LEVEL} from './state';
 import welcomeScreen from './main-welcome';
 import screenArtist from './main-level-artist';
 import screenGenre from './main-level-genre';
@@ -6,58 +7,22 @@ import resultsScreen from './main-results';
 
 /**
  * @function
- * @param {State} state
- * @param {boolean} isAnswerCorrect
- * @param {number} nextLevel
- */
-const showNextScreen = (state, isAnswerCorrect, nextLevel) => {
-  // TODO: isAnswerCorrect использовать для изменения количества доступных попыток и в зависимости от этого открывать уровень
-  if (nextLevel) {
-    renderScreen(Object.assign({}, state, {level: nextLevel}));
-  } else {
-    renderScreen(`results`);
-  }
-};
-
-/**
- * @function
- * @param {Question} question
- * @param {Answer[]} answers
- * @return {boolean}
- */
-const isAnswerCorrect = (question, answers) => {
-  const compareAnswers = (a1, a2) => a1.id - a2.id;
-
-  const correctAnswers = question.answers.filter((answer) => answer.isCorrect).sort(compareAnswers);
-
-  if (correctAnswers.length !== answers.length) {
-    return false;
-  }
-
-  const givenAnswers = answers.slice(0).sort(compareAnswers);
-  return givenAnswers.every((answer, index) => answer.id === correctAnswers[index].id);
-};
-
-/**
- * @function
  * @param {State|string} state
  * @return {HTMLElement|DocumentFragment}
  */
 const getStateScreen = (state) => {
-  if (typeof state === `string`) {
-    switch (state) {
-      case `welcome`: return welcomeScreen();
-      case `results`: {
-        const results = Math.trunc(Math.random() * 100) % 2 === 0 ? {melodies: 0, percent: 0} : {melodies: Math.trunc(Math.random() * 10), percent: Math.trunc(Math.random() * 100)};
-        return resultsScreen(results);
-      }
+  switch (state.level) {
+    case WELCOME_LEVEL: return welcomeScreen();
+    case RESULTS_LEVEL: {
+      return resultsScreen({answers: state.answers, percent: 60});
     }
-  } else {
-    const currentQuestion = data.questions[state.level];
+    default: {
+      const currentQuestion = data.questions[state.level];
 
-    switch (currentQuestion.type) {
-      case `artist`: return screenArtist(currentQuestion);
-      case `genre`: return screenGenre(currentQuestion);
+      switch (currentQuestion.type) {
+        case `artist`: return screenArtist(currentQuestion);
+        case `genre`: return screenGenre(currentQuestion);
+      }
     }
   }
   return null;
@@ -83,7 +48,7 @@ const renderScreen = (state) => {
     const screenElement = appElement.firstElementChild;
     screenElement.addEventListener(`answer`, (event) => {
       event.preventDefault();
-      showNextScreen(state, isAnswerCorrect(currentQuestion, event.detail), currentQuestion.next);
+      renderScreen(applyAnswer(state, currentQuestion, event.detail));
     });
   }
 };
