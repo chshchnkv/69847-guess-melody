@@ -1,5 +1,6 @@
 import AbstractView from './abstract-view';
 import logo from './logo';
+
 /**
  * @typedef {Object} Results
  * @property {number} answers
@@ -43,6 +44,9 @@ class ResultsView extends AbstractView {
     });
   }
 
+  /**
+   * @function
+   */
   onRestart() {}
 }
 

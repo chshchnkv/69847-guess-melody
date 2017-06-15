@@ -12,7 +12,7 @@ export default class AbstractView {
 
   /**
    * @function
-   * @return {DocumentFragment}
+   * @return {HTMLElement}
    */
   render() {
     return createElement(this.template);
