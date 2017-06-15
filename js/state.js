@@ -8,6 +8,7 @@ import {isAnswerCorrect} from './data';
  */
 
 export const MAX_TIME = 120;
+export const MAX_TIME_MINS = Math.trunc(MAX_TIME / 60);
 export const MAX_LEVELS = 10;
 export const WELCOME_LEVEL = -1;
 export const RESULTS_LEVEL = MAX_LEVELS + 1;

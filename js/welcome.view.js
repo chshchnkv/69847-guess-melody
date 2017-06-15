@@ -1,8 +1,7 @@
 import AbstractView from './abstract-view';
 import logo from './logo';
-// import createElement from './templates';
 
-import {MAX_TIME} from './state';
+import {MAX_TIME_MINS} from './state';
 
 class WelcomeView extends AbstractView {
   /**
@@ -16,7 +15,7 @@ class WelcomeView extends AbstractView {
         <button class="main-play">Начать игру</button>
         <h2 class="title main-title">Правила игры</h2>
         <p class="text main-text">
-          Правила просты&nbsp;— за&nbsp;${Math.trunc(MAX_TIME / 60)} минуты дать
+          Правила просты&nbsp;— за&nbsp;${MAX_TIME_MINS} минуты дать
           максимальное количество правильных ответов.<br>
           Удачи!
         </p>
