@@ -8,7 +8,7 @@ import resultsScreen from './main-results';
 /**
  * @function
  * @param {State|string} state
- * @return {HTMLElement|DocumentFragment}
+ * @return {HTMLElement}
  */
 const getStateScreen = (state) => {
   switch (state.level) {
@@ -41,7 +41,8 @@ const appElement = document.querySelector(`.app`);
  */
 const renderScreen = (state) => {
   let screenFragment = getStateScreen(state);
-  appElement.replaceChild(screenFragment, appElement.firstElementChild);
+  appElement.removeChild(appElement.firstElementChild);
+  appElement.insertBefore(screenFragment, appElement.firstElementChild);
 
   if (typeof state === `object`) {
     const currentQuestion = data.questions[state.level];

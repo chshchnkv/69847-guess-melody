@@ -11,7 +11,7 @@ const levelTemplate = `
 /**
  *
  * @param {Answer} data
- * @return {DocumentFragment}
+ * @return {HTMLElement}
  */
 const answerGenre = (data) => {
   return getElementFromTemplate(`\
@@ -25,7 +25,7 @@ const answerGenre = (data) => {
 
 /**
  * @param {Question} question
- * @return {DocumentFragment}
+ * @return {HTMLElement}
  */
 export default (question) => {
   const levelFragment = getElementFromTemplate(levelTemplate);

@@ -26,7 +26,7 @@ const levelTemplate = `\
 
 /**
  * @param {Answer} data
- * @return {DocumentFragment|null}
+ * @return {HTMLElement}
  */
 const answerArtist = (data) => {
   return getElementFromTemplate(`\
