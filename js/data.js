@@ -1,6 +1,7 @@
 /**
  * @typedef {Object} Question
  * @property {number} id
+ * @property {string} label
  * @property {string} type - [artist|genre]
  * @property {Answer[]} answers
  * @property {number} next

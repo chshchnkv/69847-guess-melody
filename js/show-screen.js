@@ -1,14 +1,13 @@
 import data from './data';
-import {applyAnswer, RESULTS_LEVEL, WELCOME_LEVEL} from './state';
+import {RESULTS_LEVEL, WELCOME_LEVEL} from './state';
 import welcomeScreen from './main-welcome';
-import screenArtist from './main-level-artist';
-import screenGenre from './main-level-genre';
 import resultsScreen from './main-results';
+import levelScreen from './main-level';
 
 /**
  * @function
  * @param {State|string} state
- * @return {HTMLElement|DocumentFragment}
+ * @return {HTMLElement}
  */
 const getStateScreen = (state) => {
   switch (state.level) {
@@ -17,15 +16,9 @@ const getStateScreen = (state) => {
       return resultsScreen({answers: state.answers, percent: 60});
     }
     default: {
-      const currentQuestion = data.questions[state.level];
-
-      switch (currentQuestion.type) {
-        case `artist`: return screenArtist(currentQuestion);
-        case `genre`: return screenGenre(currentQuestion);
-      }
+      return levelScreen(state, data.questions[state.level]);
     }
   }
-  return null;
 };
 
 /**
@@ -39,18 +32,8 @@ const appElement = document.querySelector(`.app`);
  * @function
  * @param {State|string} [state] - состояние
  */
-const renderScreen = (state) => {
-  let screenFragment = getStateScreen(state);
-  appElement.replaceChild(screenFragment, appElement.firstElementChild);
-
-  if (typeof state === `object`) {
-    const currentQuestion = data.questions[state.level];
-    const screenElement = appElement.firstElementChild;
-    screenElement.addEventListener(`answer`, (event) => {
-      event.preventDefault();
-      renderScreen(applyAnswer(state, currentQuestion, event.detail));
-    });
-  }
+const showScreen = (state) => {
+  appElement.replaceChild(getStateScreen(state), appElement.firstElementChild);
 };
 
-export default renderScreen;
+export default showScreen;
