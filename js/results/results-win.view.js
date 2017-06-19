@@ -1,4 +1,5 @@
 import ResultsView from './results.view';
+import {MAX_TIME_MINS} from '../game/state';
 
 /**
  * @class
@@ -14,7 +15,7 @@ class WinView extends ResultsView {
     return `
       <section class="main main--result">
         <h2 class="title">Вы настоящий меломан!</h2>
-        <div class="main-stat">За&nbsp;2&nbsp;минуты<br>вы&nbsp;отгадали ${this._results.answers}&nbsp;мелодии</div>
+        <div class="main-stat">За&nbsp;${MAX_TIME_MINS}&nbsp;минуты<br>вы&nbsp;отгадали ${this._results.answers}&nbsp;мелодии</div>
         <span class="main-comparison">Это&nbsp;лучше чем у&nbsp;${this._results.percent}%&nbsp;игроков</span>
         <span role="button" tabindex="0" class="main-replay">Сыграть ещё раз</span>
       </section>

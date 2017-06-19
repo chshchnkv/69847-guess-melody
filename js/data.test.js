@@ -1,6 +1,6 @@
 import assert from 'assert';
 import data from './data';
-import {getInitialState, increaseAnswersCount, setLevel, decreaseLivesCount, resetLivesCount, setTime, applyAnswer, RESULTS_LEVEL, MAX_LEVELS, MAX_TIME} from './state';
+import {getInitialState, increaseAnswersCount, setLevel, decreaseLivesCount, resetLivesCount, setTime, applyAnswer, RESULTS_LEVEL, MAX_LEVELS, MAX_TIME} from './game/state';
 
 describe(`game`, () => {
 
