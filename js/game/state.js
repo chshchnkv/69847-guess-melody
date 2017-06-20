@@ -40,6 +40,15 @@ export const setTime = (state, time) => {
 /**
  * @function
  * @param {State} state
+ * @return {State}
+ */
+export const tick = (state) => {
+  return setTime(state, state.time + 1);
+};
+
+/**
+ * @function
+ * @param {State} state
  * @param {number} [level = RESULTS_LEVEL]
  * @return {State}
  */
@@ -102,7 +111,7 @@ export const increaseAnswersCount = (state) => {
  * @function
  * @param {State} state
  * @param {Question} question
- * @param {Answer[] | Answer} answers
+ * @param {Answer[]} answers
  * @return {State}
  */
 export const applyAnswer = (state, question, answers) => {

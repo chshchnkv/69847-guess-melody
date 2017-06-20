@@ -1,20 +1,16 @@
 import changeView from '../change-view';
 import welcomeView from './welcome.view';
-import app from '../application';
+import Application from '../application';
 
-class Welcome {
+class WelcomePresenter {
   constructor() {
     this.view = welcomeView;
-  }
-
-  init() {
     changeView(this.view);
 
     this.view.onStart = () => {
-      app.showGame();
+      Application.showGame();
     };
   }
 }
 
-const welcome = new Welcome();
-export default welcome;
+export default WelcomePresenter;
