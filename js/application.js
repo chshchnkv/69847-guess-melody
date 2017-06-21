@@ -1,35 +1,93 @@
-import WelcomePresenter from './welcome/welcome';
-import ResultsPresenter from './results/results';
-import GamePresenter from './game/game';
+import welcomePresenter from './welcome/welcome';
+import resultsPresenter from './results/results';
+import gamePresenter from './game/game';
+
+/**
+ * @enum {string}
+ */
+const ControllerId = {
+  WELCOME: ``,
+  GAME: `game`,
+  RESULTS: `results`
+};
+
+/**
+ * @function
+ * @param {string} hash
+ * @return {string}
+ */
+const getPresenterIdFromHash = (hash) => hash.replace(`#`, ``);
 
 /**
  * @class
  */
 class Application {
   /**
+   * @constructor
+   */
+  constructor() {
+    /**
+     * @enum {AbstractPresenter}
+     */
+    this.routes = {
+      [ControllerId.WELCOME]: welcomePresenter,
+      [ControllerId.RESULTS]: resultsPresenter,
+      [ControllerId.GAME]: gamePresenter
+    };
+
+    window.onhashchange = () => this.init();
+  }
+
+  /**
+   * Обрабатывает хэш и показывает сразу нужный презентер
    * @function
-   * @return {WelcomePresenter}
+   */
+  init() {
+    this.changeController(getPresenterIdFromHash(location.hash));
+  }
+
+  /**
+   * @function
+   * @param {string} [route = ``]
+   */
+  changeController(route = ``) {
+    const routeId = route.split(`/`)[0];
+    /** @type {AbstractPresenter} */
+    const presenter = this.routes[routeId];
+
+    if (routeId === ControllerId.RESULTS) {
+      const results = JSON.parse(atob(location.hash.split(`/`)[1]));
+      presenter.init(results);
+    } else {
+      presenter.init();
+    }
+  }
+
+  /**
+   * @function
    */
   static showWelcome() {
-    return new WelcomePresenter();
+    location.hash = ControllerId.WELCOME;
   }
 
   /**
    * @function
-   * @return {GamePresenter}
    */
   static showGame() {
-    return new GamePresenter();
+    location.hash = ControllerId.GAME;
   }
 
   /**
    * @function
-   * @param {Results} results
-   * @return {ResultsPresenter}
+   * @param {Results} resultsData
    */
-  static showResults(results) {
-    return new ResultsPresenter(results);
+  static showResults(resultsData) {
+    location.hash = `${ControllerId.RESULTS}/${btoa(JSON.stringify(resultsData))}`;
   }
 }
 
-export default Application;
+/**
+ * @type {Application}
+ */
+const application = new Application();
+export default application;

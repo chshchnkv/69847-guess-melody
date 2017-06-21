@@ -3,14 +3,17 @@ import {getInitialState, applyAnswer, tick, RESULTS_LEVEL} from './state';
 import LevelGenreView from './level-genre.view';
 import LevelArtistView from './level-artist.view';
 import changeView from '../change-view';
-import Application from '../application';
+import application from '../application';
+import AbstractPresenter from '../abstract-presenter';
 
-class GamePresenter {
+class GamePresenter extends AbstractPresenter {
   /**
-   * @constructor
-   * @param {State} [state = getInitialState]
+   * Стартует игру
+   * @function
+   * @override
+   * @param {State} [state = getInitialState()]
    */
-  constructor(state = getInitialState()) {
+  init(state = getInitialState()) {
     this.state = state;
     this._tickInterval = setInterval(() => {
       this.state = tick(this.state);
@@ -22,6 +25,7 @@ class GamePresenter {
   }
 
   /**
+   * Проверяет закончилась ли игра
    * @get
    * @return {boolean}
    */
@@ -30,11 +34,12 @@ class GamePresenter {
   }
 
   /**
+   * Завершает игру
    * @function
    */
   finishGame() {
     clearInterval(this._tickInterval);
-    Application.showResults({answers: this.state.answers, percent: 60});
+    application.constructor.showResults({answers: this.state.answers, percent: 60});
   }
 
   /**
@@ -60,4 +65,6 @@ class GamePresenter {
     }
   }
 }
-export default GamePresenter;
+
+const gamePresenter = new GamePresenter();
+export default gamePresenter;
