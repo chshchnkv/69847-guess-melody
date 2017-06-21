@@ -1,5 +1,5 @@
-import AbstractView from './abstract-view';
-import logo from './logo';
+import AbstractView from '../abstract-view';
+import logo from '../logo';
 
 /**
  * @typedef {Object} Results

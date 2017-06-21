@@ -1,7 +1,7 @@
-import AbstractView from './abstract-view';
-import logo from './logo';
+import AbstractView from '../abstract-view';
+import logo from '../logo';
 
-import {MAX_TIME_MINS} from './state';
+import {MAX_TIME_MINS} from '../game/state';
 
 class WelcomeView extends AbstractView {
   /**

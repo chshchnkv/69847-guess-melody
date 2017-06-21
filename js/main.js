@@ -1,9 +1,8 @@
 /**
  * Created by stanislavchashchnikov on 24.05.17.
  */
-import showScreen from './show-screen';
-import {getInitialState} from './state';
+import Application from './application';
 
 document.addEventListener(`DOMContentLoaded`, () => {
-  showScreen(getInitialState());
+  Application.showWelcome();
 });

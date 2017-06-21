@@ -1,6 +1,6 @@
 import LevelView from './level.view';
 import AnswerArtistView from './answer-artist.view';
-import {MAX_TIME_MINS} from './state';
+import {MAX_TIME_MINS} from '../game/state';
 
 export default class LevelArtistView extends LevelView {
   /**
@@ -54,5 +54,5 @@ export default class LevelArtistView extends LevelView {
     return element;
   }
 
-  onAnswer(answers) {};
+  onAnswer(answers) {}
 }

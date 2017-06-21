@@ -1,4 +1,4 @@
-import {isAnswerCorrect} from './data';
+import {isAnswerCorrect} from '../data';
 /**
  * @typedef {Object} State
  * @property {string} level
@@ -10,7 +10,6 @@ import {isAnswerCorrect} from './data';
 export const MAX_TIME = 120;
 export const MAX_TIME_MINS = Math.trunc(MAX_TIME / 60);
 export const MAX_LEVELS = 10;
-export const WELCOME_LEVEL = -1;
 export const RESULTS_LEVEL = MAX_LEVELS + 1;
 
 /**
@@ -19,7 +18,7 @@ export const RESULTS_LEVEL = MAX_LEVELS + 1;
  */
 export const getInitialState = () => {
   return Object.freeze({
-    level: WELCOME_LEVEL,
+    level: 0,
     lives: 3,
     time: 0,
     answers: 0
@@ -41,11 +40,20 @@ export const setTime = (state, time) => {
 /**
  * @function
  * @param {State} state
+ * @return {State}
+ */
+export const tick = (state) => {
+  return setTime(state, state.time + 1);
+};
+
+/**
+ * @function
+ * @param {State} state
  * @param {number} [level = RESULTS_LEVEL]
  * @return {State}
  */
 export const setLevel = (state, level) => {
-  const toLevel = (typeof level === `undefined`) || (state.lives === 0) ? RESULTS_LEVEL : Math.max(WELCOME_LEVEL, Math.min(RESULTS_LEVEL, level));
+  const toLevel = (typeof level === `undefined`) || (state.lives === 0) ? RESULTS_LEVEL : Math.max(0, Math.min(RESULTS_LEVEL, level));
   return Object.assign({}, state, {level: toLevel});
 };
 
@@ -103,7 +111,7 @@ export const increaseAnswersCount = (state) => {
  * @function
  * @param {State} state
  * @param {Question} question
- * @param {Answer[] | Answer} answers
+ * @param {Answer[]} answers
  * @return {State}
  */
 export const applyAnswer = (state, question, answers) => {
