@@ -1,21 +1,24 @@
-import Application from '../application';
+import application from '../application';
 import WinView from './results-win.view';
 import FailView from './results-fail.view';
 import changeView from '../change-view';
+import AbstractPresenter from '../abstract-presenter';
 
-class ResultsPresenter {
+class ResultsPresenter extends AbstractPresenter {
   /**
-   * @constructor
+   * @function
+   * @override
    * @param {Results} results
    */
-  constructor(results) {
+  init(results) {
     this.view = results.answers > 0 ? new WinView(results) : new FailView(results);
 
     this.view.onRestart = () => {
-      Application.showWelcome();
+      application.constructor.showWelcome();
     };
     changeView(this.view);
   }
 }
 
-export default ResultsPresenter;
+const resultsPresenter = new ResultsPresenter();
+export default resultsPresenter;

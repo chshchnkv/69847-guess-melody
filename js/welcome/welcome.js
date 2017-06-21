@@ -1,16 +1,22 @@
 import changeView from '../change-view';
 import welcomeView from './welcome.view';
-import Application from '../application';
+import application from '../application';
+import AbstractPresenter from '../abstract-presenter';
 
-class WelcomePresenter {
-  constructor() {
+class WelcomePresenter extends AbstractPresenter {
+  /**
+   * @function
+   * @override
+   */
+  init() {
     this.view = welcomeView;
     changeView(this.view);
 
     this.view.onStart = () => {
-      Application.showGame();
+      application.constructor.showGame();
     };
   }
 }
 
-export default WelcomePresenter;
+const welcomePresenter = new WelcomePresenter();
+export default welcomePresenter;
