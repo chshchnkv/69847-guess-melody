@@ -1,12 +1,16 @@
-import {getLevelQuestion} from '../data';
 import {getInitialState, applyAnswer, tick, RESULTS_LEVEL} from './state';
 import LevelGenreView from './level-genre.view';
 import LevelArtistView from './level-artist.view';
 import changeView from '../change-view';
 import application from '../application';
 import AbstractPresenter from '../abstract-presenter';
+import {QuestionType} from '../data';
 
 class GamePresenter extends AbstractPresenter {
+  constructor(data) {
+    super();
+    this._data = data;
+  }
   /**
    * Стартует игру
    * @function
@@ -43,6 +47,18 @@ class GamePresenter extends AbstractPresenter {
   }
 
   /**
+   * @function
+   * @param {number} level
+   * @return {Question|null}
+   */
+  getLevelQuestion(level) {
+    if (level < this._data.questions.length) {
+      return this._data.questions[level];
+    }
+    return null;
+  }
+
+  /**
    * Показ нужной вьюхи в зависимости от состояния игры
    * @function
    * @override
@@ -51,9 +67,9 @@ class GamePresenter extends AbstractPresenter {
   changeState(state) {
     this.state = state;
 
-    const question = getLevelQuestion(this.state.level);
+    const question = this.getLevelQuestion(this.state.level);
     if (question) {
-      this.view = question.type === `artist` ? new LevelArtistView(question) : new LevelGenreView(question);
+      this.view = question.type === QuestionType.ARTIST ? new LevelArtistView(question) : new LevelGenreView(question);
 
       this.view.onAnswer = (answers) => {
         this.changeState(applyAnswer(this.state, question, answers));
@@ -66,5 +82,4 @@ class GamePresenter extends AbstractPresenter {
   }
 }
 
-const gamePresenter = new GamePresenter();
-export default gamePresenter;
+export default GamePresenter;

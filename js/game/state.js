@@ -1,7 +1,7 @@
 import {isAnswerCorrect} from '../data';
 /**
  * @typedef {Object} State
- * @property {string} level
+ * @property {number} level
  * @property {number} lives
  * @property {number} time
  * @property {number} answers

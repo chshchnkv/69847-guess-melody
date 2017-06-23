@@ -15,6 +15,11 @@
  * @property {boolean} isCorrect
  */
 
+export const QuestionType = {
+  GENRE: `genre`,
+  ARTIST: `artist`
+};
+
 const data = Object.freeze({
   questions: [{
     id: 0,
@@ -133,11 +138,4 @@ export const isAnswerCorrect = (question, answers) => {
  */
 export const getCorrectAnswers = (question) => {
   return question.answers.filter((answer) => answer.isCorrect);
-};
-
-export const getLevelQuestion = (level) => {
-  if (level < data.questions.length) {
-    return data.questions[level];
-  }
-  return null;
 };

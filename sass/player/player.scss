@@ -6,6 +6,28 @@
   margin-right: 20px;
 }
 
+.player {
+  position: relative;
+
+  height: 100%;
+
+  .player-track {
+    display: flex;
+    height: 100%;
+  }
+
+  .player-status {
+    background-color: rgb(239, 238, 212);
+  }
+
+  .player-control {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+  }
+}
+
 
 @keyframes fadein {
   0% { opacity: 0 }
