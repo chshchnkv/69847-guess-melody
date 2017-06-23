@@ -42,6 +42,7 @@ export default class LevelArtistView extends LevelView {
    */
   render() {
     const element = super.render();
+    window.initializePlayer(element.querySelector(`.player-wrapper`), this.question.content, true);
     element.querySelector(`.main-title`).innerText = this.question.label;
 
     const answersList = element.querySelector(`.main-list`);
