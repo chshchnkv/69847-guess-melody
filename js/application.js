@@ -1,7 +1,8 @@
 import welcomePresenter from './welcome/welcome';
 import resultsPresenter from './results/results';
-import gamePresenter from './game/game';
-
+import GamePresenter from './game/game';
+import Model from './model';
+import defaultAdapter from './model-adapter';
 /**
  * @enum {string}
  */
@@ -22,20 +23,17 @@ const getPresenterIdFromHash = (hash) => hash.replace(`#`, ``);
  * @class
  */
 class Application {
-  /**
-   * @constructor
-   */
   constructor() {
     /**
-     * @enum {AbstractPresenter}
+     * @type {Model}
      */
-    this.routes = {
-      [ControllerId.WELCOME]: welcomePresenter,
-      [ControllerId.RESULTS]: resultsPresenter,
-      [ControllerId.GAME]: gamePresenter
-    };
+    this.model = new class extends Model {
+      get urlRead() {
+        return `https://intensive-ecmascript-server-btfgudlkpi.now.sh/guess-melody/questions`;
+      }
+    }();
 
-    window.onhashchange = () => this.init();
+    window.onhashchange = () => this.changeController(getPresenterIdFromHash(location.hash));
   }
 
   /**
@@ -43,7 +41,20 @@ class Application {
    * @function
    */
   init() {
-    this.changeController(getPresenterIdFromHash(location.hash));
+    this.model.load(defaultAdapter)
+      .then((data) => this.setup(data))
+      .then(() => this.changeController(getPresenterIdFromHash(location.hash)));
+  }
+
+  setup(data) {
+    /**
+     * @enum {AbstractPresenter}
+     */
+    this.routes = {
+      [ControllerId.WELCOME]: welcomePresenter,
+      [ControllerId.RESULTS]: resultsPresenter,
+      [ControllerId.GAME]: new GamePresenter(data)
+    };
   }
 
   /**
