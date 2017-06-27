@@ -11,6 +11,16 @@ class GamePresenter extends AbstractPresenter {
     super();
     this._data = data;
   }
+
+  /**
+   * Проверяет закончилась ли игра
+   * @get
+   * @return {boolean}
+   */
+  get isFinished() {
+    return this.state.level === RESULTS_LEVEL;
+  }
+
   /**
    * Стартует игру
    * @function
@@ -29,21 +39,12 @@ class GamePresenter extends AbstractPresenter {
   }
 
   /**
-   * Проверяет закончилась ли игра
-   * @get
-   * @return {boolean}
-   */
-  get isFinished() {
-    return this.state.level === RESULTS_LEVEL;
-  }
-
-  /**
    * Завершает игру
    * @function
    */
   finishGame() {
     clearInterval(this._tickInterval);
-    application.constructor.showResults({answers: this.state.answers, percent: 60});
+    application.constructor.showResults({answers: this.state.answers, time: this.state.time});
   }
 
   /**

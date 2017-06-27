@@ -5,7 +5,7 @@ import {MAX_TIME_MINS} from '../game/state';
  * @class
  * @extends ResultsView
  */
-class WinView extends ResultsView {
+export default class WinView extends ResultsView {
   /**
    * @get
    * @override
@@ -22,5 +22,3 @@ class WinView extends ResultsView {
     `.trim();
   }
 }
-
-export default WinView;

@@ -4,7 +4,7 @@ import logo from '../logo';
 /**
  * @typedef {Object} Results
  * @property {number} answers
- * @property {number} percent
+ * @property {number} time
  */
 
 /**
@@ -15,7 +15,7 @@ class ResultsView extends AbstractView {
 
   /**
    * @constructor
-   * @param {Results} results
+   * @param {Results[] | Results} results
    */
   constructor(results) {
     super();
@@ -27,9 +27,9 @@ class ResultsView extends AbstractView {
    * @override
    */
   render() {
-    const welcomeScreen = super.render();
-    welcomeScreen.insertBefore(logo(), welcomeScreen.firstElementChild);
-    return welcomeScreen;
+    const resultsScreen = super.render();
+    resultsScreen.insertBefore(logo(), resultsScreen.firstElementChild);
+    return resultsScreen;
   }
 
   /**

@@ -19,6 +19,22 @@ export default class LevelGenreView extends LevelView {
   }
 
   /**
+   * @get
+   * @type {AnswerView[]}
+   */
+  get checkedAnswers() {
+    return this.answerViews.filter((answerView) => answerView.isChosen);
+  }
+
+  /**
+   * @get
+   * @type {Answer[]}
+   */
+  get checkedAnswersData() {
+    return this.checkedAnswers.map((answerView) => answerView._answerData);
+  }
+
+  /**
    * @function
    * @override
    * @return {HTMLElement}
@@ -44,21 +60,5 @@ export default class LevelGenreView extends LevelView {
       this.onAnswer(this.checkedAnswersData);
     });
     return element;
-  }
-
-  /**
-   * @get
-   * @type {AnswerView[]}
-   */
-  get checkedAnswers() {
-    return this.answerViews.filter((answerView) => answerView.isChosen);
-  }
-
-  /**
-   * @get
-   * @type {Answer[]}
-   */
-  get checkedAnswersData() {
-    return this.checkedAnswers.map((answerView) => answerView._answerData);
   }
 }
