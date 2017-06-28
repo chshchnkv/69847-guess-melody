@@ -1,5 +1,6 @@
 import LevelView from './level.view';
 import AnswerGenreView from './answer-genre.view';
+import timer from './timer.view';
 
 export default class LevelGenreView extends LevelView {
   /**
@@ -41,6 +42,7 @@ export default class LevelGenreView extends LevelView {
    */
   render() {
     const element = super.render();
+    element.insertBefore(timer, element.firstElementChild);
     element.querySelector(`.title`).innerText = this.question.label;
     const genreForm = element.querySelector(`.genre`);
     const submitBtn = genreForm.querySelector(`.genre-answer-send`);

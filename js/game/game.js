@@ -1,24 +1,16 @@
-import {getInitialState, applyAnswer, tick, RESULTS_LEVEL} from './state';
+import {getInitialState, applyAnswer, tick, MAX_TIME} from './state';
 import LevelGenreView from './level-genre.view';
 import LevelArtistView from './level-artist.view';
 import changeView from '../change-view';
 import application from '../application';
 import AbstractPresenter from '../abstract-presenter';
 import {QuestionType} from '../data';
+import timer from '../timer';
 
 class GamePresenter extends AbstractPresenter {
   constructor(data) {
     super();
     this._data = data;
-  }
-
-  /**
-   * Проверяет закончилась ли игра
-   * @get
-   * @return {boolean}
-   */
-  get isFinished() {
-    return this.state.level === RESULTS_LEVEL;
   }
 
   /**
@@ -29,13 +21,11 @@ class GamePresenter extends AbstractPresenter {
    */
   init(state = getInitialState()) {
     this.state = state;
+    this.changeState(this.state);
+    timer(MAX_TIME, () => this.finishGame());
     this._tickInterval = setInterval(() => {
       this.state = tick(this.state);
-      if (this.isFinished) {
-        this.finishGame();
-      }
     }, 1000);
-    this.changeState(this.state);
   }
 
   /**
