@@ -1,6 +1,6 @@
 import assert from 'assert';
 import data from './data';
-import {getInitialState, increaseAnswersCount, setLevel, decreaseLivesCount, resetLivesCount, setTime, applyAnswer, RESULTS_LEVEL, MAX_LEVELS, MAX_TIME} from './game/state';
+import {getInitialState, increaseAnswersCount, setLevel, decreaseLivesCount, resetLivesCount, setTime, applyAnswer, increaseScore, RESULTS_LEVEL, MAX_LEVELS, MAX_TIME} from './game/state';
 
 describe(`game`, () => {
 
@@ -18,6 +18,36 @@ describe(`game`, () => {
   describe(`increaseAnswersCount`, () => {
     it(`should increase answers count by 1`, () => {
       assert.equal(1, increaseAnswersCount(initialState).answers);
+    });
+  });
+
+  describe(`increaseScore`, () => {
+    it(`should increase score count by 1`, () => {
+      assert.equal(1, increaseScore(initialState).score);
+    });
+  });
+
+  describe(`increaseScore`, () => {
+    it(`should increase score count by 1`, () => {
+      assert.equal(1, increaseScore(initialState, 1).score);
+    });
+  });
+
+  describe(`increaseScore`, () => {
+    it(`should not increase score count`, () => {
+      assert.equal(0, increaseScore(initialState, -1).score);
+    });
+  });
+
+  describe(`increaseScore`, () => {
+    it(`should increase score count by 2`, () => {
+      assert.equal(2, increaseScore(initialState, 2).score);
+    });
+  });
+
+  describe(`increaseScore`, () => {
+    it(`should increase score count by 2`, () => {
+      assert.equal(2, increaseScore(initialState, 20).score);
     });
   });
 

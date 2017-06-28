@@ -4,6 +4,7 @@ import GamePresenter from './game/game';
 import Model from './model';
 import ModelAdapter from './model-adapter';
 import {QuestionType} from './data';
+import {MAX_TIME} from './game/state';
 
 /**
  * @enum {string}
@@ -38,6 +39,9 @@ const defaultAdapter = new class extends ModelAdapter {
 
       if (dataQuestion.type === QuestionType.ARTIST) {
         modelQuestion.content = dataQuestion.src;
+        if (dataQuestion.src.trim() === ``) {
+          return;
+        }
       }
 
       const modelAnswers = [];
@@ -72,7 +76,16 @@ const defaultAdapter = new class extends ModelAdapter {
 
 const statsAdapter = new class extends ModelAdapter {
   preprocess(data) {
-    return data.filter((item) => typeof item.time !== `undefined`);
+    for (let result of data) {
+      if (!(`time` in result)) {
+        result.time = MAX_TIME;
+      }
+
+      if (!(`score` in result)) {
+        result.score = 0;
+      }
+    }
+    return data;
   }
 }();
 
@@ -142,9 +155,11 @@ class Application {
       this.stats.send(results)
         .then(() => this.stats.load(statsAdapter))
         .then((fullResults) => {
-          const sorted = fullResults.slice(0);
-          sorted.sort((a, b) => b.date - a.date);
-          presenter.init(sorted.slice(0, 3));
+          if (results.answers > 0) {
+            const resultsWithLessScore = fullResults.filter((it) => it.score < results.score);
+            results.percent = fullResults.length > 0 ? Math.min(100, Math.trunc(resultsWithLessScore.length / fullResults.length * 100)) : 100;
+          }
+          presenter.init(results);
         });
     } else {
       presenter.init();

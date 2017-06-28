@@ -5,6 +5,7 @@ import logo from '../logo';
  * @typedef {Object} Results
  * @property {number} answers
  * @property {number} time
+ * @property {number} score
  */
 
 /**

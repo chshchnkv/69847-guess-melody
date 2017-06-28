@@ -7,6 +7,8 @@ const updateState = (element, player) => {
 
 
 const syncState = (player, element) => {
+  const button = element.querySelector(`button`);
+  button.innerHTML = player.paused ? `Play` : `Stop`;
   element.classList.toggle(`player--is-playing`, !player.paused);
 };
 

@@ -1,7 +1,6 @@
 import LevelView from './level.view';
 import AnswerArtistView from './answer-artist.view';
 import initializePlayer from '../player';
-import timer from './timer.view';
 
 export default class LevelArtistView extends LevelView {
   /**
@@ -30,7 +29,6 @@ export default class LevelArtistView extends LevelView {
    */
   render() {
     const element = super.render();
-    element.insertBefore(timer, element.firstElementChild);
     initializePlayer(element.querySelector(`.player-wrapper`), this.question.content, true);
     element.querySelector(`.main-title`).innerText = this.question.label;
 
@@ -43,6 +41,4 @@ export default class LevelArtistView extends LevelView {
     });
     return element;
   }
-
-  onAnswer(answers) {}
 }
