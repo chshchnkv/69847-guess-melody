@@ -29,7 +29,7 @@ export default class LevelArtistView extends LevelView {
    */
   render() {
     const element = super.render();
-    initializePlayer(element.querySelector(`.player-wrapper`), this.question.content, true);
+    this._destroyPlayer = initializePlayer(element.querySelector(`.player-wrapper`), this.question.content, true);
     element.querySelector(`.main-title`).innerText = this.question.label;
 
     const answersList = element.querySelector(`.main-list`);
@@ -40,5 +40,15 @@ export default class LevelArtistView extends LevelView {
       answersList.appendChild(answerView.element);
     });
     return element;
+  }
+
+  /**
+   * @function
+   * @override
+   */
+  stopPlayback() {
+    if (this._destroyPlayer && typeof this._destroyPlayer === `function`) {
+      this._destroyPlayer();
+    }
   }
 }

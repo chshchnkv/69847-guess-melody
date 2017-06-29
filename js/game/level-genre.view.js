@@ -63,4 +63,12 @@ export default class LevelGenreView extends LevelView {
     });
     return element;
   }
+
+  /**
+   * @function
+   * @override
+   */
+  stopPlayback() {
+    this.answerViews.forEach((answerView) => answerView.stopPlayback());
+  }
 }

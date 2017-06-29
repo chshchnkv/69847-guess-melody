@@ -11,7 +11,10 @@
   }
 }
 
+$initTransform: translate(-50%, -50%);
+
 .main-play {
+  cursor: pointer;
   background: transparent;
   border-color: transparent;
   border-left-color: $color-orange;
@@ -19,19 +22,22 @@
   border-width: 70px 0 70px 100px;
   font-size: 0;
   height: 0;
-  margin-top: -185px;
   margin-left: 20px;
   padding: 0;
   position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: #{$initTransform};
+  transition: 0.3s transform ease-out;
   text-indent: -100em;
   transform-origin: center;
   width: 0;
 }
 
 .main-play:hover {
-  transform: scale(1.05);
+  transform: #{$initTransform} scale(1.05);
 }
 
 .main-play:active {
-  transform: scale(1.04);
+  transform: #{$initTransform} scale(1.04);
 }

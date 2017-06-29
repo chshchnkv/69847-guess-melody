@@ -33,8 +33,14 @@ input[type=checkbox]:checked + .genre-answer-check {
   margin: 20px auto 0;
   padding: 0 20px;
   text-align: center;
+
+  &:disabled {
+    color: #ccc;
+    border-color: #ccc;
+  }
 }
 
-.genre-answer-send:hover {
+.genre-answer-send:enabled:hover {
+  cursor: pointer;
   color: $color-orange;
 }

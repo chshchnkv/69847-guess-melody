@@ -32,6 +32,12 @@ export default class Model {
       .then(adapter.preprocess);
   }
 
+  /**
+   * @function
+   * @param {*} data
+   * @param {ModelAdapter} adapter
+   * @return {Promise}
+   */
   send(data, adapter = defaultAdapter) {
     return fetch(this.urlWrite, {
       method: `POST`,
