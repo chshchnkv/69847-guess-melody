@@ -23,7 +23,7 @@ export default class AnswerGenreView extends AnswerView {
    */
   render() {
     const element = super.render();
-    this._destroyPlayer = initializePlayer(element.querySelector(`.player-wrapper`), this._answerData.content);
+    this._destroyPlayer = initializePlayer(element.querySelector(`.player-wrapper`), this._answerData.audio.src);
     return element;
   }
 
