@@ -1,4 +1,5 @@
 import AnswerView from './answer.view';
+import initializePlayer from '../player';
 
 export default class AnswerGenreView extends AnswerView {
   /**
@@ -22,7 +23,7 @@ export default class AnswerGenreView extends AnswerView {
    */
   render() {
     const element = super.render();
-    window.initializePlayer(element.querySelector(`.player-wrapper`), this._answerData.content);
+    initializePlayer(element.querySelector(`.player-wrapper`), this._answerData.content);
     return element;
   }
 }

@@ -1,6 +1,6 @@
 import LevelView from './level.view';
 import AnswerArtistView from './answer-artist.view';
-import {MAX_TIME_MINS} from '../game/state';
+import initializePlayer from '../player';
 
 export default class LevelArtistView extends LevelView {
   /**
@@ -10,20 +10,7 @@ export default class LevelArtistView extends LevelView {
    */
   get template() {
     return `
-      <section class="main main--level main--level-artist">
-        <svg xmlns="http://www.w3.org/2000/svg" class="timer" viewBox="0 0 780 780">
-          <circle
-            cx="390" cy="390" r="370"
-            class="timer-line"
-            style="filter: url(.#blur); transform: rotate(-90deg) scaleY(-1); transform-origin: center"></circle>
-      
-          <div class="timer-value" xmlns="http://www.w3.org/1999/xhtml">
-            <span class="timer-value-mins">${MAX_TIME_MINS}</span><!--
-            --><span class="timer-value-dots">:</span><!--
-            --><span class="timer-value-secs">00</span>
-          </div>
-        </svg>
-      
+      <section class="main main--level main--level-artist">      
         <div class="main-wrap">
           <div class="main-timer"></div>
       
@@ -42,7 +29,7 @@ export default class LevelArtistView extends LevelView {
    */
   render() {
     const element = super.render();
-    window.initializePlayer(element.querySelector(`.player-wrapper`), this.question.content, true);
+    initializePlayer(element.querySelector(`.player-wrapper`), this.question.content, true);
     element.querySelector(`.main-title`).innerText = this.question.label;
 
     const answersList = element.querySelector(`.main-list`);
@@ -54,6 +41,4 @@ export default class LevelArtistView extends LevelView {
     });
     return element;
   }
-
-  onAnswer(answers) {}
 }

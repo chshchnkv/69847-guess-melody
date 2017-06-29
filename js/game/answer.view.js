@@ -13,6 +13,14 @@ export default class AnswerView extends AbstractView {
   }
 
   /**
+   * @get
+   * @type {boolean}
+   */
+  get isChosen() {
+    return this._answerIsChosen;
+  }
+
+  /**
    * @function
    * @override
    */
@@ -31,12 +39,4 @@ export default class AnswerView extends AbstractView {
    * @abstract
    */
   onAnswer(answerData) {}
-
-  /**
-   * @get
-   * @type {boolean}
-   */
-  get isChosen() {
-    return this._answerIsChosen;
-  }
 }

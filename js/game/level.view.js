@@ -4,9 +4,11 @@ class LevelView extends AbstractView {
   /**
    * @constructor
    * @param {Question} question
+   * @param {HTMLElement} timerView
    */
-  constructor(question) {
+  constructor(question, timerView) {
     super();
+    this.timerView = timerView;
     /**
      * @type {Question}
      */
@@ -22,6 +24,17 @@ class LevelView extends AbstractView {
    * @param {Answer[]} answers
    */
   onAnswer(answers) {}
+
+  /**
+   * @function
+   * @override
+   * @return {HTMLElement}
+   */
+  render() {
+    const element = super.render();
+    element.insertBefore(this.timerView, element.firstElementChild);
+    return element;
+  }
 }
 
 export default LevelView;

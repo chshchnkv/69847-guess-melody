@@ -1,16 +1,19 @@
-import {getInitialState, applyAnswer, tick, RESULTS_LEVEL} from './state';
+import {getInitialState, applyAnswer, tick, MAX_TIME, RESULTS_LEVEL} from './state';
 import LevelGenreView from './level-genre.view';
 import LevelArtistView from './level-artist.view';
 import changeView from '../change-view';
 import application from '../application';
 import AbstractPresenter from '../abstract-presenter';
 import {QuestionType} from '../data';
+import timer from '../timer';
+import timerView from './timer.view';
 
 class GamePresenter extends AbstractPresenter {
   constructor(data) {
     super();
     this._data = data;
   }
+
   /**
    * Стартует игру
    * @function
@@ -19,22 +22,11 @@ class GamePresenter extends AbstractPresenter {
    */
   init(state = getInitialState()) {
     this.state = state;
+    this.changeState(this.state);
+    this.timerStop = timer(MAX_TIME, () => this.finishGame());
     this._tickInterval = setInterval(() => {
       this.state = tick(this.state);
-      if (this.isFinished) {
-        this.finishGame();
-      }
     }, 1000);
-    this.changeState(this.state);
-  }
-
-  /**
-   * Проверяет закончилась ли игра
-   * @get
-   * @return {boolean}
-   */
-  get isFinished() {
-    return this.state.level === RESULTS_LEVEL;
   }
 
   /**
@@ -42,8 +34,9 @@ class GamePresenter extends AbstractPresenter {
    * @function
    */
   finishGame() {
+    this.timerStop();
     clearInterval(this._tickInterval);
-    application.constructor.showResults({answers: this.state.answers, percent: 60});
+    application.constructor.showResults({answers: this.state.answers, time: this.state.time, score: this.state.score});
   }
 
   /**
@@ -67,14 +60,16 @@ class GamePresenter extends AbstractPresenter {
   changeState(state) {
     this.state = state;
 
-    const question = this.getLevelQuestion(this.state.level);
-    if (question) {
-      this.view = question.type === QuestionType.ARTIST ? new LevelArtistView(question) : new LevelGenreView(question);
+    if (this.state.level !== RESULTS_LEVEL) {
+      const question = this.getLevelQuestion(this.state.level);
+      let answerTime = 0;
+      this.view = question.type === QuestionType.ARTIST ? new LevelArtistView(question, timerView) : new LevelGenreView(question, timerView);
 
       this.view.onAnswer = (answers) => {
-        this.changeState(applyAnswer(this.state, question, answers));
+        this.changeState(applyAnswer(this.state, question, answers, new Date() - answerTime));
       };
 
+      answerTime = new Date();
       changeView(this.view);
     } else {
       this.finishGame();

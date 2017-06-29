@@ -5,6 +5,7 @@ import {isAnswerCorrect} from '../data';
  * @property {number} lives
  * @property {number} time
  * @property {number} answers
+ * @property {number} score
  */
 
 export const MAX_TIME = 120;
@@ -21,7 +22,8 @@ export const getInitialState = () => {
     level: 0,
     lives: 3,
     time: 0,
-    answers: 0
+    answers: 0,
+    score: 0
   });
 };
 
@@ -112,11 +114,38 @@ export const increaseAnswersCount = (state) => {
  * @param {State} state
  * @param {Question} question
  * @param {Answer[]} answers
+ * @param {number} [answerTime]
  * @return {State}
  */
-export const applyAnswer = (state, question, answers) => {
-  let resultState = isAnswerCorrect(question, answers) ? increaseAnswersCount(state) : decreaseLivesCount(state);
+export const applyAnswer = (state, question, answers, answerTime) => {
+  const isCorrect = isAnswerCorrect(question, answers);
+  let resultState = isCorrect ? increaseAnswersCount(state) : decreaseLivesCount(state);
+  if (isCorrect && typeof answerTime !== `undefined`) {
+    resultState = increaseScore(resultState, answerTime / 1000 < 10 ? 2 : 1);
+  }
   resultState = setLevel(resultState, question.next);
 
   return Object.assign({}, state, resultState);
+};
+
+/**
+ * @function
+ * @param {State} state
+ * @param {number} score
+ * @return {State}
+ * @private
+ */
+const _setScore = (state, score) => {
+  return Object.assign({}, state, {score: Math.max(0, score)});
+};
+
+/**
+ * @function
+ * @param {State} state
+ * @param {number} [increment = 1]
+ * @return {State}
+ */
+export const increaseScore = (state, increment) => {
+  const inc = increment || 1;
+  return _setScore(state, state.score + Math.max(0, Math.min(2, inc)));
 };

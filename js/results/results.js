@@ -8,7 +8,7 @@ class ResultsPresenter extends AbstractPresenter {
   /**
    * @function
    * @override
-   * @param {Results} results
+   * @param {Results[] | Results} results
    */
   init(results) {
     this.view = results.answers > 0 ? new WinView(results) : new FailView(results);

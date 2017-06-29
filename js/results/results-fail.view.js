@@ -4,7 +4,7 @@ import ResultsView from './results.view';
  * @class
  * @extends ResultsView
  */
-class FailView extends ResultsView {
+export default class FailView extends ResultsView {
   /**
    * @get
    * @override
@@ -20,5 +20,3 @@ class FailView extends ResultsView {
     `.trim();
   }
 }
-
-export default FailView;

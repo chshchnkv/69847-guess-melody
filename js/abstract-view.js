@@ -11,6 +11,18 @@ export default class AbstractView {
   }
 
   /**
+   * @get
+   * @return {DocumentFragment|*}
+   */
+  get element() {
+    if (!this._element) {
+      this._element = this.render();
+      this.bind();
+    }
+    return this._element;
+  }
+
+  /**
    * @function
    * @return {HTMLElement}
    */
@@ -23,16 +35,4 @@ export default class AbstractView {
    * @abstract
    */
   bind() {}
-
-  /**
-   * @get
-   * @return {DocumentFragment|*}
-   */
-  get element() {
-    if (!this._element) {
-      this._element = this.render();
-      this.bind();
-    }
-    return this._element;
-  }
 }

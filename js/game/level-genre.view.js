@@ -10,12 +10,30 @@ export default class LevelGenreView extends LevelView {
   get template() {
     return `
       <section class="main main--level main--level-genre">
-        <h2 class="title"></h2>
-        <form class="genre">
-          <button class="genre-answer-send" type="submit" disabled>Ответить</button>
-        </form>
+        <div class="main-wrap">
+          <h2 class="title"></h2>
+          <form class="genre">
+            <button class="genre-answer-send" type="submit" disabled>Ответить</button>
+          </form>
+        </div>
       </section>
     `.trim();
+  }
+
+  /**
+   * @get
+   * @type {AnswerView[]}
+   */
+  get checkedAnswers() {
+    return this.answerViews.filter((answerView) => answerView.isChosen);
+  }
+
+  /**
+   * @get
+   * @type {Answer[]}
+   */
+  get checkedAnswersData() {
+    return this.checkedAnswers.map((answerView) => answerView._answerData);
   }
 
   /**
@@ -44,21 +62,5 @@ export default class LevelGenreView extends LevelView {
       this.onAnswer(this.checkedAnswersData);
     });
     return element;
-  }
-
-  /**
-   * @get
-   * @type {AnswerView[]}
-   */
-  get checkedAnswers() {
-    return this.answerViews.filter((answerView) => answerView.isChosen);
-  }
-
-  /**
-   * @get
-   * @type {Answer[]}
-   */
-  get checkedAnswersData() {
-    return this.checkedAnswers.map((answerView) => answerView._answerData);
   }
 }
