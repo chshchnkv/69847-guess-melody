@@ -45,10 +45,7 @@ class GamePresenter extends AbstractPresenter {
    * @return {Question|null}
    */
   getLevelQuestion(level) {
-    if (level < this._data.questions.length) {
-      return this._data.questions[level];
-    }
-    return null;
+    return level < this._data.questions.length ? this._data.questions[level] : null;
   }
 
   /**
@@ -66,6 +63,7 @@ class GamePresenter extends AbstractPresenter {
       this.view = question.type === QuestionType.ARTIST ? new LevelArtistView(question, timerView) : new LevelGenreView(question, timerView);
 
       this.view.onAnswer = (answers) => {
+        this.view.stopPlayback();
         this.changeState(applyAnswer(this.state, question, answers, new Date() - answerTime));
       };
 

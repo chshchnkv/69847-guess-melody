@@ -129,13 +129,3 @@ export const isAnswerCorrect = (question, answers) => {
   const givenAnswers = answers.slice(0).sort(compareAnswers);
   return givenAnswers.every((answer, index) => answer.id === correctAnswers[index].id);
 };
-
-
-/**
- * @function
- * @param {Question} question
- * @return {Answer[]}
- */
-export const getCorrectAnswers = (question) => {
-  return question.answers.filter((answer) => answer.isCorrect);
-};

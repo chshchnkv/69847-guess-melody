@@ -35,6 +35,11 @@ export default class AnswerView extends AbstractView {
 
   /**
    * @function
+   */
+  stopPlayback() {}
+
+  /**
+   * @function
    * @param {Answer} answerData
    * @abstract
    */

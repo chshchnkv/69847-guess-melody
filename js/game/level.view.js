@@ -21,12 +21,6 @@ class LevelView extends AbstractView {
 
   /**
    * @function
-   * @param {Answer[]} answers
-   */
-  onAnswer(answers) {}
-
-  /**
-   * @function
    * @override
    * @return {HTMLElement}
    */
@@ -35,6 +29,17 @@ class LevelView extends AbstractView {
     element.insertBefore(this.timerView, element.firstElementChild);
     return element;
   }
+
+  /**
+   * @function
+   */
+  stopPlayback() {}
+
+  /**
+   * @function
+   * @param {Answer[]} answers
+   */
+  onAnswer(answers) {}
 }
 
 export default LevelView;

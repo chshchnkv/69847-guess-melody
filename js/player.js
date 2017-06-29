@@ -37,7 +37,7 @@ const destroyPlayer = (element, state) => {
     state.stopAnimation();
   }
 
-  player.src = null;
+  player.removeAttribute(`src`);
   button.onclick = null;
   element.innerHTML = ``;
   state = null;
