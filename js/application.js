@@ -22,20 +22,15 @@ const ControllerId = {
  */
 const getPresenterIdFromHash = (hash) => hash.replace(`#`, ``);
 
-const PRELOAD_TIMEOUT = 10000;
-
 const preloadAudio = (src) => {
   return new Promise((resolve, reject) => {
-    const audio = new Audio();
-    audio.preload = `auto`;
-    audio.oncanplay = () => {
-      clearTimeout(timer);
-      resolve(audio);
-    };
-    audio.src = src;
-    const timer = setTimeout(() => {
-      resolve(audio);
-    }, PRELOAD_TIMEOUT);
+    fetch(src)
+      .then((response) => {
+        fetch(response.url)
+          .then(() => resolve(response.url))
+          .catch(() => reject(response));
+      })
+      .catch(() => reject());
   });
 };
 
@@ -47,15 +42,23 @@ const preloadAudio = (src) => {
 const preloadQuestionAudio = (question) => {
   return new Promise((resolve, reject) => {
     if (question.type === QuestionType.ARTIST) {
-      preloadAudio(question.content).then((audio) => {
-        question.audio = audio;
-        resolve(question);
-      });
+      preloadAudio(question.content)
+        .then((audioFile) => {
+          question.content = audioFile;
+          resolve(question);
+        })
+        .catch(() => {
+          question.content = ``;
+          resolve(question);
+        });
     } else if (question.type === QuestionType.GENRE) {
       Promise.all(question.answers.map((it) => {
         return preloadAudio(it.content)
-          .then((audio) => {
-            it.audio = audio;
+          .then((audioFile) => {
+            it.content = audioFile;
+          })
+          .catch(() => {
+            it.content = ``;
           });
       }))
         .then(() => {
@@ -98,6 +101,9 @@ const defaultAdapter = new class extends ModelAdapter {
 
           if (dataQuestion.type === QuestionType.GENRE) {
             modelAnswer.isCorrect = dataAnswer.genre === dataQuestion.genre;
+            if (dataAnswer.src.trim() === ``) {
+              return;
+            }
           } else if (dataQuestion.type === QuestionType.ARTIST) {
             modelAnswer.content = dataAnswer.image.url;
             modelAnswer.label = dataAnswer.title;
@@ -117,6 +123,13 @@ const defaultAdapter = new class extends ModelAdapter {
 
       Promise.all(questions.map(preloadQuestionAudio))
         .then(() => {
+          const successLoaded = questions.filter((it) => (typeof it.content === `undefined`) || (it.content !== null));
+          for (let question of successLoaded) {
+            if (question.type === QuestionType.GENRE) {
+              question.answers = question.answers.filter((it) => it.content !== ``);
+            }
+          }
+          preprocessed.questions = successLoaded;
           resolve(preprocessed);
         });
     });

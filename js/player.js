@@ -56,19 +56,20 @@ export default (element, file, autoplay = false, controllable = true) => {
   const player = content.querySelector(`audio`);
   const button = content.querySelector(`button`);
 
-  player.onloadeddata = () => {
+  const audio = new Audio();
+  audio.oncanplay = () => {
     if (controllable) {
-      button.onclick = () => switchState(state, player, content);
+      button.onclick = () => switchState(state, audio, content);
     }
 
     if (autoplay) {
-      switchState(state, player, content);
+      switchState(state, audio, content);
     }
   };
-
-  player.src = file;
+  content.replaceChild(audio, player);
   element.appendChild(content);
   element.classList.toggle(`player--no-controls`, !controllable);
+  audio.src = file;
 
   return () => destroyPlayer(element, state);
 };
