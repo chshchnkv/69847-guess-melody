@@ -43,7 +43,7 @@ const defaultAdapter = new class extends ModelAdapter {
       const questions = preprocessed.questions;
       const questionsCount = data.length;
 
-      const urlPromises = [];
+      // const urlPromises = [];
       const urlSet = new Set();
 
       Object.keys(data).forEach((questionKey, dataQuestionIndex) => {
@@ -60,13 +60,9 @@ const defaultAdapter = new class extends ModelAdapter {
           if (dataQuestion.src.trim() === ``) {
             return;
           }
-          urlPromises.push(getRealUrl(dataQuestion.src).then((url) => {
-            if (url === ``) {
-              return;
-            }
-            modelQuestion.content = url;
-            urlSet.add(url);
-          }));
+
+          modelQuestion.content = dataQuestion.src;
+          urlSet.add(dataQuestion.src);
         }
 
         const modelAnswers = [];
@@ -81,13 +77,8 @@ const defaultAdapter = new class extends ModelAdapter {
               return;
             }
             modelAnswer.isCorrect = dataAnswer.genre === dataQuestion.genre;
-            urlPromises.push(getRealUrl(dataAnswer.src).then((url) => {
-              if (url === ``) {
-                return;
-              }
-              modelAnswer.content = url;
-              urlSet.add(url);
-            }));
+            modelAnswer.content = dataAnswer.src;
+            urlSet.add(dataAnswer.src);
           } else if (dataQuestion.type === QuestionType.ARTIST) {
             modelAnswer.content = dataAnswer.image.url;
             modelAnswer.label = dataAnswer.title;
@@ -105,17 +96,15 @@ const defaultAdapter = new class extends ModelAdapter {
         questions.push(modelQuestion);
       });
 
-      Promise.all(urlPromises)
+      Promise.all([...urlSet].map((url) => {
+        return fetch(url)
+          .then((file) => file.blob())
+          .catch((resp) => reject(resp));
+      }))
         .then(() => {
-          return Promise.all([...urlSet].map((url) => {
-            fetch(url)
-              .then((file) => file.blob())
-              .catch((resp) => reject(resp));
-          }))
-            .then(() => {
-              resolve(preprocessed);
-            });
-        });
+          resolve(preprocessed);
+        })
+        .catch((resp) => reject(resp));
     });
   }
 }();
