@@ -15,6 +15,14 @@ const syncState = (player, element) => {
 
 const switchState = (state, player, element) => {
   if (player.paused) {
+    const restPlayers = [...document.querySelectorAll(`audio`)].filter((it) => it !== player);
+    restPlayers.forEach((it) => {
+      it.pause();
+      syncState(it, it.parentElement);
+      updateState(it.parentElement, it);
+    });
+
+
     player.play();
     state.stopAnimation = animate(
         getAnimation(player.currentTime, 1000, player.duration),

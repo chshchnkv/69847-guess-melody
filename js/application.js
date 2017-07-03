@@ -22,50 +22,18 @@ const ControllerId = {
  */
 const getPresenterIdFromHash = (hash) => hash.replace(`#`, ``);
 
-const preloadAudio = (src) => {
-  return new Promise((resolve, reject) => {
-    fetch(src)
-      .then((response) => {
-        fetch(response.url)
-          .then(() => resolve(response.url))
-          .catch(() => reject(response));
-      })
-      .catch(() => reject());
-  });
-};
-
-/**
- * @function
- * @param {Question} question
- * @return {Promise}
- */
-const preloadQuestionAudio = (question) => {
-  return new Promise((resolve, reject) => {
-    if (question.type === QuestionType.ARTIST) {
-      preloadAudio(question.content)
-        .then((audioFile) => {
-          question.content = audioFile;
-          resolve(question);
-        })
-        .catch(() => {
-          question.content = ``;
-          resolve(question);
-        });
-    } else if (question.type === QuestionType.GENRE) {
-      Promise.all(question.answers.map((it) => {
-        return preloadAudio(it.content)
-          .then((audioFile) => {
-            it.content = audioFile;
-          })
-          .catch(() => {
-            it.content = ``;
-          });
-      }))
-        .then(() => {
-          resolve(question);
-        });
-    }
-  });
+const getRealUrl = (src) => {
+  return fetch(src)
+    .then((response) => {
+      if (response.status === 200) {
+        return response.url.trim();
+      } else {
+        return ``;
+      }
+    })
+    .catch(() => {
+      return ``;
+    });
 };
 
 const defaultAdapter = new class extends ModelAdapter {
@@ -74,6 +42,10 @@ const defaultAdapter = new class extends ModelAdapter {
       const preprocessed = {questions: []};
       const questions = preprocessed.questions;
       const questionsCount = data.length;
+
+      const urlPromises = [];
+      const urlSet = new Set();
+
       Object.keys(data).forEach((questionKey, dataQuestionIndex) => {
 
         const dataQuestion = data[questionKey];
@@ -85,10 +57,16 @@ const defaultAdapter = new class extends ModelAdapter {
         };
 
         if (dataQuestion.type === QuestionType.ARTIST) {
-          modelQuestion.content = dataQuestion.src;
           if (dataQuestion.src.trim() === ``) {
             return;
           }
+          urlPromises.push(getRealUrl(dataQuestion.src).then((url) => {
+            if (url === ``) {
+              return;
+            }
+            modelQuestion.content = url;
+            urlSet.add(url);
+          }));
         }
 
         const modelAnswers = [];
@@ -96,14 +74,20 @@ const defaultAdapter = new class extends ModelAdapter {
         dataQuestion.answers.forEach((dataAnswer, dataAnswerIndex) => {
           const modelAnswer = {
             id: dataAnswerIndex,
-            content: dataAnswer.src,
           };
 
           if (dataQuestion.type === QuestionType.GENRE) {
-            modelAnswer.isCorrect = dataAnswer.genre === dataQuestion.genre;
             if (dataAnswer.src.trim() === ``) {
               return;
             }
+            modelAnswer.isCorrect = dataAnswer.genre === dataQuestion.genre;
+            urlPromises.push(getRealUrl(dataAnswer.src).then((url) => {
+              if (url === ``) {
+                return;
+              }
+              modelAnswer.content = url;
+              urlSet.add(url);
+            }));
           } else if (dataQuestion.type === QuestionType.ARTIST) {
             modelAnswer.content = dataAnswer.image.url;
             modelAnswer.label = dataAnswer.title;
@@ -121,16 +105,16 @@ const defaultAdapter = new class extends ModelAdapter {
         questions.push(modelQuestion);
       });
 
-      Promise.all(questions.map(preloadQuestionAudio))
+      Promise.all(urlPromises)
         .then(() => {
-          const successLoaded = questions.filter((it) => (typeof it.content === `undefined`) || (it.content !== null));
-          for (let question of successLoaded) {
-            if (question.type === QuestionType.GENRE) {
-              question.answers = question.answers.filter((it) => it.content !== ``);
-            }
-          }
-          preprocessed.questions = successLoaded;
-          resolve(preprocessed);
+          return Promise.all([...urlSet].map((url) => {
+            fetch(url)
+              .then((file) => file.blob())
+              .catch((resp) => reject(resp));
+          }))
+            .then(() => {
+              resolve(preprocessed);
+            });
         });
     });
   }
