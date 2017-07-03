@@ -22,20 +22,6 @@ const ControllerId = {
  */
 const getPresenterIdFromHash = (hash) => hash.replace(`#`, ``);
 
-const getRealUrl = (src) => {
-  return fetch(src)
-    .then((response) => {
-      if (response.status === 200) {
-        return response.url.trim();
-      } else {
-        return ``;
-      }
-    })
-    .catch(() => {
-      return ``;
-    });
-};
-
 const defaultAdapter = new class extends ModelAdapter {
   preprocess(data) {
     return new Promise((resolve, reject) => {
