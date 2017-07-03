@@ -23,7 +23,7 @@ class GamePresenter extends AbstractPresenter {
   init(state = getInitialState()) {
     this.state = state;
     this.changeState(this.state);
-    this.timerStop = timer(MAX_TIME, () => this.finishGame());
+    this.timerStop = timer(MAX_TIME, () => this.finishGame(false));
     this._tickInterval = setInterval(() => {
       this.state = tick(this.state);
     }, 1000);
@@ -32,11 +32,12 @@ class GamePresenter extends AbstractPresenter {
   /**
    * Завершает игру
    * @function
+   * @param {boolean} success
    */
-  finishGame() {
+  finishGame(success) {
     this.timerStop();
     clearInterval(this._tickInterval);
-    application.constructor.showResults({answers: this.state.answers, time: this.state.time, score: this.state.score});
+    application.constructor.showResults({answers: success ? this.state.answers : 0, time: this.state.time, score: success ? this.state.score : 0});
   }
 
   /**
@@ -70,7 +71,7 @@ class GamePresenter extends AbstractPresenter {
       answerTime = new Date();
       changeView(this.view);
     } else {
-      this.finishGame();
+      this.finishGame(true);
     }
   }
 }
